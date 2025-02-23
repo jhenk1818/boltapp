@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .pricing-widget {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: black;
+      padding: 1.5rem;
+      border-radius: 2rem;
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+
+    .widget-container {
+      background: rgb(17, 24, 39);
+      padding: 2rem;
+      border-radius: 2rem;
+      border: 1px solid rgb(31, 41, 55);
+    }
+
+    .title {
+      color: white;
+      font-size: 1.875rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .toggle-group {
+      background: rgb(31, 41, 55);
+      padding: 0.375rem;
+      border-radius: 1.5rem;
+      display: inline-flex;
+    }
+
+    .toggle-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 1.2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: rgb(156, 163, 175);
+    }
+
+    .toggle-button:hover {
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .toggle-button.active {
+      background: linear-gradient(to right, rgb(37, 99, 235), rgb(59, 130, 246), rgb(55, 65, 81));
+      color: white;
+      border-color: rgb(96, 165, 250);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .plans-container {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .plan-button {
+      background: linear-gradient(to right, black, rgb(37, 99, 235), rgb(31, 41, 55));
+      padding: 1rem;
+      border-radius: 1.5rem;
+      border: 2px solid rgb(96, 165, 250);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      transform: scale(1);
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      max-width: 24rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .plan-button:hover {
+      background: linear-gradient(to right, black, rgb(29, 78, 216), rgb(31, 41, 55));
+      transform: scale(1.05);
+    }
+
+    .plan-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: white;
+    }
+
+    .plan-duration {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .plan-price {
+      font-size: 1.125rem;
+      font-weight: bold;
+    }
+
+    .plan-period {
+      font-size: 0.875rem;
+      color: rgb(229, 231, 235);
+    }
+
+    .security-text {
+      color: white;
+      font-size: 1.125rem;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .payment-method {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .payment-icon {
+      width: 4rem;
+      height: 4rem;
+      background: rgb(31, 41, 55);
+      border-radius: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgb(55, 65, 81);
+      transition: all 0.3s;
+    }
+
+    .payment-icon:hover {
+      transform: scale(1.1);
+      border-color: rgb(96, 165, 250);
+    }
+
+    .payment-name {
+      font-size: 0.875rem;
+      color: rgb(156, 163, 175);
+    }
+
+    [data-plans="multiple"] {
+      display: none;
+    }
+
+    .show-multiple [data-plans="single"] {
+      display: none;
+    }
+
+    .show-multiple [data-plans="multiple"] {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="pricing-widget">
+    <div class="widget-container">
+      <h1 class="title">Choose My Plan</h1>
+      
+      <div class="toggle-container">
+        <div class="toggle-group">
+          <button class="toggle-button active" onclick="togglePlans('single')">1 Connection</button>
+          <button class="toggle-button" onclick="togglePlans('multiple')">Multiple Connections</button>
+        </div>
+      </div>
+      
+      <div class="plans-container" id="plansContainer">
+        <!-- Single Connection Plans -->
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+          <div class="plan-content">
+            <span class="plan-duration">12 Months</span>
+            <span class="plan-price">$74.99</span>
+            <span class="plan-period">per year</span>
+          </div>
+        </a>
+        
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+          <div class="plan-content">
+            <span class="plan-duration">6 Months</span>
+            <span class="plan-price">$49.99</span>
+            <span class="plan-period">per 6 months</span>
+          </div>
+        </a>
+        
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+          <div class="plan-content">
+            <span class="plan-duration">3 Months</span>
+            <span class="plan-price">$34.00</span>
+            <span class="plan-period">per 3 months</span>
+          </div>
+        </a>
+
+        <!-- Multiple Connection Plans -->
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+          <div class="plan-content">
+            <span class="plan-duration">12 Months</span>
+            <span class="plan-price">$149.99</span>
+            <span class="plan-period">per year</span>
+          </div>
+        </a>
+        
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+          <div class="plan-content">
+            <span class="plan-duration">6 Months</span>
+            <span class="plan-price">$99.99</span>
+            <span class="plan-period">per 6 months</span>
+          </div>
+        </a>
+        
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+          <div class="plan-content">
+            <span class="plan-duration">3 Months</span>
+            <span class="plan-price">$69.00</span>
+            <span class="plan-period">per 3 months</span>
+          </div>
+        </a>
+      </div>
+
+      <p class="security-text">Safe and secure checkout</p>
+
+      <div class="payment-methods">
+        <div class="payment-method">
+          <div class="payment-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="14" x="2" y="5" rx="2"/>
+              <line x1="2" x2="22" y1="10" y2="10"/>
+            </svg>
+          </div>
+          <span class="payment-name">Credit Card</span>
+        </div>
+        
+        <div class="payment-method">
+          <div class="payment-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/>
+              <path d="M10 2c1 .5 2 2 2 5"/>
+            </svg>
+          </div>
+          <span class="payment-name">Apple Pay</span>
+        </div>
+        
+        <div class="payment-method">
+          <div class="payment-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/>
+              <circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </div>
+          <span class="payment-name">Amazon Pay</span>
+        </div>
+        
+        <div class="payment-method">
+          <div class="payment-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" x2="12" y1="2" y2="22"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="payment-name">Cash App</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePlans(type) {
+      const container = document.getElementById('plansContainer').parentElement;
+      const buttons = document.querySelectorAll('.toggle-button');
+      
+      buttons.forEach(button => {
+        button.classList.remove('active');
+        if (button.textContent.toLowerCase().includes(type)) {
+          button.classList.add('active');
+        }
+      });
+      
+      if (type === 'multiple') {
+        container.classList.add('show-multiple');
+      } else {
+        container.classList.remove('show-multiple');
+      }
+    }
+  </script>
+</body>
+</html>
