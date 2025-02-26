@@ -1,0 +1,9 @@
+name = "stripe-redirect-proxy"
+main = "worker.js"
+compatibility_date = "2024-03-15"
+
+[vars]
+ENVIRONMENT = "production"
+
+# Headers should be defined differently in Wrangler
+# They will be set in the worker code instead

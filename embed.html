@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <style>
     .pricing-widget {
       font-family: system-ui, -apple-system, sans-serif;
@@ -184,7 +185,7 @@
       
       <div class="plans-container" id="plansContainer">
         <!-- Single Connection Plans -->
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">12 Months</span>
             <span class="plan-price">$74.99</span>
@@ -192,7 +193,7 @@
           </div>
         </a>
         
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">6 Months</span>
             <span class="plan-price">$49.99</span>
@@ -200,7 +201,7 @@
           </div>
         </a>
         
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="single" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">3 Months</span>
             <span class="plan-price">$34.00</span>
@@ -209,7 +210,7 @@
         </a>
 
         <!-- Multiple Connection Plans -->
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">12 Months</span>
             <span class="plan-price">$149.99</span>
@@ -217,7 +218,7 @@
           </div>
         </a>
         
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">6 Months</span>
             <span class="plan-price">$99.99</span>
@@ -225,7 +226,7 @@
           </div>
         </a>
         
-        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple">
+        <a href="http://localhost:3001/redirect?url=https://example.com" class="plan-button" data-plans="multiple" rel="noopener noreferrer" referrerpolicy="no-referrer">
           <div class="plan-content">
             <span class="plan-duration">3 Months</span>
             <span class="plan-price">$69.00</span>
@@ -282,6 +283,17 @@
   </div>
 
   <script>
+    // Set referrer policy programmatically
+    if (document.head) {
+      let metaReferrer = document.head.querySelector('meta[name="referrer"]');
+      if (!metaReferrer) {
+        metaReferrer = document.createElement('meta');
+        metaReferrer.name = 'referrer';
+        metaReferrer.content = 'no-referrer';
+        document.head.appendChild(metaReferrer);
+      }
+    }
+    
     function togglePlans(type) {
       const container = document.getElementById('plansContainer').parentElement;
       const buttons = document.querySelectorAll('.toggle-button');
