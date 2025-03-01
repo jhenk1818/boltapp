@@ -158,6 +158,115 @@ app.post('/register', (req, res) => {
   }
 });
 
+// New simplified redirect endpoint
+app.get('/redirect', (req, res) => {
+  try {
+    const { url } = req.query;
+    
+    if (!url) {
+      return res.status(404).send('URL not found');
+    }
+
+    const parsedUrl = new URL(url);
+    const searchParams = new URLSearchParams(parsedUrl.search);
+    
+    for (const [key] of searchParams) {
+      const lowerKey = key.toLowerCase();
+      if (TRACKING_PARAMS.some(param => lowerKey.includes(param)) || 
+          /^(id|sid|uid|user|visitor|session)/i.test(lowerKey)) {
+        searchParams.delete(key);
+      }
+    }
+
+    parsedUrl.hash = '';
+    parsedUrl.search = searchParams.toString();
+    const cleanUrl = parsedUrl.toString();
+
+    // Set comprehensive security headers
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
+    res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    res.setHeader('Permissions-Policy', 'interest-cohort=()');
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="referrer" content="no-referrer">
+          <meta http-equiv="refresh" content="0;url=${cleanUrl}">
+          <script>
+            // Clear any existing data
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) { 
+              document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            // Add random delay between 1-3 seconds
+            setTimeout(() => {
+              // Perform the redirect
+              window.location.replace("${cleanUrl}");
+            }, Math.floor(Math.random() * 2000) + 1000);
+          </script>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, sans-serif;
+              background: #000;
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+            }
+            .loader {
+              border: 3px solid rgba(255, 255, 255, 0.3);
+              border-radius: 50%;
+              border-top: 3px solid #fff;
+              width: 30px;
+              height: 30px;
+              animation: spin 1s linear infinite;
+              margin-right: 15px;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            .container {
+              display: flex;
+              align-items: center;
+            }
+          </style>
+        </head>
+        <body>
+          <noscript>
+            <meta http-equiv="refresh" content="3;url=${cleanUrl}">
+          </noscript>
+          <div class="container">
+            <div class="loader"></div>
+            <div>Redirecting securely...</div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
+  } catch (error) {
+    res.status(400).send('Invalid URL');
+  }
+});
+
+// Keep the original redirect/:id endpoint for backward compatibility
 app.get('/redirect/:id', (req, res) => {
   try {
     const { id } = req.params;

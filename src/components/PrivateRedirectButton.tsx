@@ -53,73 +53,26 @@ const PrivateRedirectButton: React.FC<PrivateRedirectButtonProps> = ({
       // Random delay
       await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
 
-      // Use the server redirect endpoint if in development
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const serverUrl = 'http://localhost:3001';
-        
-        try {
-          // Register the URL first
-          const registerResponse = await fetch(`${serverUrl}/register`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Referrer-Policy': 'no-referrer',
-            },
-            credentials: 'omit', // Prevent sending cookies
-            body: JSON.stringify({ url: destination }),
-          });
-
-          if (!registerResponse.ok) {
-            throw new Error(`Failed to register URL`);
-          }
-
-          const { id } = await registerResponse.json();
-          
-          // Create a temporary anchor element with explicit referrer policy
-          const link = document.createElement('a');
-          link.href = `${serverUrl}/redirect/${id}`;
-          link.rel = 'noopener noreferrer';
-          link.referrerPolicy = 'no-referrer';
-          
-          // Trigger the redirect
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          return;
-        } catch (error) {
-          console.error('Server error:', error instanceof Error ? error.message : 'Unknown server error');
-        }
-      }
-
-      // In production, use the Cloudflare Worker
-      // Replace this URL with your actual Cloudflare Worker URL after deployment
-      const workerUrl = 'https://stripe-redirect-proxy.your-subdomain.workers.dev';
-      const proxyUrl = `${workerUrl}?url=${encodeURIComponent(destination)}`;
-
-      // Create minimal anchor for redirect with explicit referrer policy
+      // Use ONLY Cloudflare Worker for redirects - no fallbacks
+      const workerUrl = 'https://stripe-redirect-proxy.YOUR_SUBDOMAIN.workers.dev';
+      
+      // Create a temporary anchor element with explicit referrer policy
       const link = document.createElement('a');
-      link.href = proxyUrl;
+      link.href = `${workerUrl}?url=${encodeURIComponent(destination)}`;
       link.rel = 'noopener noreferrer';
       link.referrerPolicy = 'no-referrer';
       
+      // Trigger the redirect
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } catch {
-      // Add random delay before fallback
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
-
-      // Fallback with minimal exposure
-      const link = document.createElement('a');
-      link.href = destination;
-      link.rel = 'noopener noreferrer';
-      link.referrerPolicy = 'no-referrer';
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Redirect failed:', error instanceof Error ? error.message : 'Unknown error');
     } finally {
-      setIsLoading(false);
+      // Reset loading state after a delay
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
     }
   };
 

@@ -1,0 +1,18 @@
+[Unit]
+Description=Zapp TV Redirect Server
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USER  # Replace with your actual user
+WorkingDirectory=/path/to/your/project  # Replace with your actual project path
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+Environment=PORT=3001
+Environment=NODE_ENV=production
+# Add any other environment variables your server needs
+# Environment=ENCRYPTION_KEY=your_encryption_key
+# Environment=ENCRYPTION_IV=your_encryption_iv
+
+[Install]
+WantedBy=multi-user.target

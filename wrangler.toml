@@ -2,6 +2,11 @@ name = "stripe-redirect-proxy"
 main = "worker.js"
 compatibility_date = "2024-03-15"
 
+# Add your domain for the worker
+routes = [
+  { pattern = "stripe-redirect-proxy.YOUR_SUBDOMAIN.workers.dev", custom_domain = false }
+]
+
 [vars]
 ENVIRONMENT = "production"
 
